@@ -1,8 +1,5 @@
 plugins {
     id 'com.android.application'
-        // START: FlutterFire Configuration
-  //  id 'com.google.gms.google-services'
-    // END: FlutterFire Configuration
     id 'kotlin-android'
     id 'dev.flutter.flutter-gradle-plugin'
 }
@@ -14,6 +11,13 @@ if (localPropertiesFile.exists()) {
         localProperties.load(reader)
     }
 }
+
+def keystoreProperties = new Properties()
+def keystorePropertiesFile = rootProject.file('key.properties')
+if (keystorePropertiesFile.exists()) {
+    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+}
+
 def getDartDefineValue = { key ->
     def dartDefines = [:]
     if (project.hasProperty('dart-defines')) {
@@ -26,17 +30,12 @@ def getDartDefineValue = { key ->
     }
     return dartDefines[key]
 }
-def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
-if (flutterVersionCode == null) {
-    flutterVersionCode = '1'
-}
 
-def flutterVersionName = localProperties.getProperty('flutter.versionName')
-if (flutterVersionName == null) {
-    flutterVersionName = '1.0'
-}
+def flutterVersionCode = localProperties.getProperty('flutter.versionCode') ?: '1'
+def flutterVersionName = localProperties.getProperty('flutter.versionName') ?: '1.0'
+
 def customScheme = getDartDefineValue('thingsboardOAuth2CallbackUrlScheme') ?: 'org.thingsboard.app.auth'
-def customLabel = getDartDefineValue('androidApplicationName') ?: 'Thingsboard app'
+def customLabel = getDartDefineValue('androidApplicationName') ?: 'Dexter'
 def appLinksUrlHost = getDartDefineValue('appLinksUrlHost') ?: 'thingsboard.cloud'
 def webPathPrefix = getDartDefineValue('webPathPrefix') ?: '/api/noauth/qr'
 def appLinksUrlScheme = getDartDefineValue('appLinksUrlScheme') ?: 'https'
@@ -44,13 +43,22 @@ def redirectURLHost = getDartDefineValue('registrationRedirectUrlHost') ?: 'app.
 def redirectURLScheme = getDartDefineValue('registrationRedirectUrlScheme') ?: 'tbscheme'
 
 android {
-namespace "org.thingsboard.pe.app"
+    namespace "org.thingsboard.pe.app"
     compileSdkVersion 35
 
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
     }
-   
+
+    signingConfigs {
+        release {
+            keyAlias keystoreProperties['keyAlias']
+            keyPassword keystoreProperties['keyPassword']
+            storeFile keystoreProperties['storeFile'] ? file(keystoreProperties['storeFile']) : null
+            storePassword keystoreProperties['storePassword']
+        }
+    }
+
     defaultConfig {
         applicationId getDartDefineValue('androidApplicationId') ?: "org.thingsboard.pe.app"
         minSdkVersion 24
@@ -59,31 +67,30 @@ namespace "org.thingsboard.pe.app"
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
         manifestPlaceholders = [
-    authScheme: customScheme,
-    appLabel: customLabel,
-    appLinksUrlHost: appLinksUrlHost,
-    webPathPrefix: webPathPrefix,
-    appLinksUrlScheme: appLinksUrlScheme,
-    redirectURLHost: redirectURLHost,
-    redirectURLScheme: redirectURLScheme
-]
+            authScheme: customScheme,
+            appLabel: customLabel,
+            appLinksUrlHost: appLinksUrlHost,
+            webPathPrefix: webPathPrefix,
+            appLinksUrlScheme: appLinksUrlScheme,
+            redirectURLHost: redirectURLHost,
+            redirectURLScheme: redirectURLScheme
+        ]
     }
-compileOptions {
+
+    compileOptions {
         coreLibraryDesugaringEnabled true 
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
     }
+
     kotlinOptions {
         jvmTarget = "17"
     }
+
     buildTypes {
         release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig signingConfigs.debug
-            // Custom proguard rules
+            signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-
         }
     }
 
@@ -93,15 +100,15 @@ compileOptions {
         implementation 'androidx.window:window:1.0.0'
         implementation 'androidx.window:window-java:1.0.0'
     }
-    android.applicationVariants.all { variant ->
-    variant.outputs.all { output ->
-        def builtType = variant.buildType.name
-        def versionName = variant.versionName
-        def versionCode = variant.versionCode
 
-        outputFileName = "${customLabel}-${builtType}-${versionName}+${versionCode}.apk"
+    android.applicationVariants.all { variant ->
+        variant.outputs.all { output ->
+            def builtType = variant.buildType.name
+            def versionName = variant.versionName
+            def versionCode = variant.versionCode
+            outputFileName = "${customLabel}-${builtType}-${versionName}+${versionCode}.apk"
+        }
     }
-}
 }
 
 flutter {

@@ -1,29 +1,27 @@
-
-import 'package:esp_smartconfig/esp_smartconfig.dart';
 import 'package:thingsboard_app/utils/services/provisioning/esp_smartconfig/i_esp_smartconfig_service.dart';
 
+/// Stub implementation.
+/// ESP SmartConfig is disabled because the package is deprecated
+/// and incompatible with modern Flutter SDK.
 class EspSmartConfigService implements IEspSmartConfigService {
-  const EspSmartConfigService(this.provisioner);
-
-   final Provisioner provisioner;
+  const EspSmartConfigService();
 
   @override
-  Provisioner create(SmartConfig config) {
-    switch (config) {
-      case SmartConfig.espTouch:
-        return Provisioner.espTouch();
-      case SmartConfig.espTouchV2:
-        return Provisioner.espTouchV2();
-    }
+  dynamic create(dynamic config) {
+    throw UnsupportedError(
+      'ESP SmartConfig is not supported in this build.',
+    );
   }
 
   @override
-  Future<void> start(ProvisioningRequest request)  {
-    return provisioner.start(request);
+  Future<void> start(dynamic request) async {
+    throw UnsupportedError(
+      'ESP SmartConfig is not supported in this build.',
+    );
   }
 
   @override
   Future<void> stop() async {
-    provisioner.stop();
+    // no-op
   }
 }

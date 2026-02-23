@@ -285,7 +285,6 @@ class WlService {
             ? ThingsboardImage.thingsBoardEUWithTitle
             : ThingsboardImage.thingsBoardWithTitle,
         height: height,
-        colorFilter: ColorFilter.mode(themeData.primaryColor, BlendMode.srcIn),
         semanticsLabel: 'ThingsBoard Logo',
       );
     } else {

@@ -1,11 +1,18 @@
-import 'package:esp_smartconfig/esp_smartconfig.dart';
+/// NOTE:
+/// ESP SmartConfig is disabled because the `esp_smartconfig` package
+/// is deprecated and incompatible with modern Flutter.
+///
+/// This interface is kept only to satisfy the application architecture.
 
 enum SmartConfig { espTouch, espTouchV2 }
 
 abstract interface class IEspSmartConfigService {
-  Provisioner create(SmartConfig config);
+  /// Creates a provisioning handler (unsupported in this build)
+  dynamic create(SmartConfig config);
 
-  Future<void> start(ProvisioningRequest request);
+  /// Starts provisioning (unsupported in this build)
+  Future<void> start(dynamic request);
 
+  /// Stops provisioning
   Future<void> stop();
 }

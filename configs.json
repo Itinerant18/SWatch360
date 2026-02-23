@@ -1,0 +1,11 @@
+{
+  "thingsboardApiEndpoint": "https://thingsboard.cloud",
+  "appLinksUrlHost": "thingsboard.cloud",
+  "appLinksUrlScheme": "https",
+  "registrationRedirectUrlScheme": "tbscheme",
+  "registrationRedirectUrlHost": "app.pe.thingsboard.org",
+  "androidApplicationId": "com.seple.demohestia",
+  "androidApplicationName": "SWatch 360",
+  "thingsboardOAuth2CallbackUrlScheme": "com.seple.demohestia.auth",
+  "thingsboardAndroidAppSecret": "aVlLY1lrcnNMV1NEMlNiS2J3TnU4aHBzUDJzbW40T3VRWEhab1Y5RWZoTEk3OENIU3ViZ3RXbVpCbHZVRzRseQ=="
+}

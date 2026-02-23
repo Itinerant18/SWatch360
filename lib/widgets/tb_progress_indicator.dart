@@ -95,10 +95,6 @@ class _TbProgressIndicatorState extends State<TbProgressIndicator>
             ThingsboardImage.thingsboardCenter,
             height: widget.size,
             width: widget.size,
-            colorFilter: ColorFilter.mode(
-              widget._getValueColor(context),
-              BlendMode.srcIn,
-            ),
           ),
           AnimatedBuilder(
             animation: _rotation!,

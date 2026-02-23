@@ -1,5 +1,7 @@
 import 'dart:ui';
 
+import 'package:thingsboard_app/config/themes/app_colors.dart';
+
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -91,7 +93,9 @@ class _LoginPageState extends TbPageState<LoginPage>
                   ),
                 ),
       child: Scaffold(
-        body: Stack(
+      backgroundColor: const Color(0xFFFAFAFA), // Off-white background
+      resizeToAvoidBottomInset: false,
+      body: Stack(
           children: [
             const LoginPageBackground(),
             BlocBuilder<AuthBloc, AuthState>(
@@ -132,43 +136,12 @@ class _LoginPageState extends TbPageState<LoginPage>
                                                 child: tbContext
                                                     .wlService.loginLogoImage,
                                               ) else const SizedBox(height: 25),
+                                        // Region selector hidden - auto-defaults to North America
                                         Visibility(
-                                          visible: selectedRegion != null,
+                                          visible: false,
                                           child: TextButton(
-                                            onPressed: () {
-                                              tbContext.showFullScreenDialog(
-                                                ChooseRegionScreen(
-                                                  tbContext,
-                                                  nASelected:
-                                                      selectedRegion ==
-                                                      Region.northAmerica,
-                                                  europeSelected:
-                                                      selectedRegion ==
-                                                      Region.europe,
-                                                ),
-                                              );
-                                            },
-                                            child: Row(
-                                              children: [
-                                                Text(
-                                                  selectedRegion
-                                                          ?.regionToString(context) ??
-                                                      '',
-                                                  style: TbTextStyles.bodyLarge,
-                                                ),
-                                                const SizedBox(width: 6),
-                                                const Padding(
-                                                  padding: EdgeInsets.only(
-                                                    top: 4,
-                                                  ),
-                                                  child: Icon(
-                                                    Icons
-                                                        .arrow_forward_ios_rounded,
-                                                    size: 12,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
+                                            onPressed: () {},
+                                            child: const SizedBox.shrink(),
                                           ),
                                         ),
                                       ],
@@ -191,9 +164,8 @@ class _LoginPageState extends TbPageState<LoginPage>
                                       child: Text(
                                         S.of(context).loginNotification,
                                         style: TbTextStyles.titleLarge.copyWith(
-                                          color: Colors.black.withValues(
-                                            alpha: .87,
-                                          ),
+                                          color: AppColors.header, // Dark text for light background
+                                          fontWeight: FontWeight.w600,
                                         ),
                                       ),
                                     ),
@@ -269,9 +241,7 @@ class _LoginPageState extends TbPageState<LoginPage>
                                         children: [
                                           Flexible(
                                             child: Divider(
-                                              color: Colors.black.withValues(
-                                                alpha: .12,
-                                              ),
+                                              color: AppColors.primary.withValues(alpha: 0.3), // Darker divider
                                             ),
                                           ),
                                           Padding(
@@ -280,18 +250,14 @@ class _LoginPageState extends TbPageState<LoginPage>
                                             ),
                                             child: Text(
                                               S.of(context).or,
-                                              style: TbTextStyles.bodyMedium
-                                                  .copyWith(
-                                                    color: Colors.black
-                                                        .withValues(alpha: .54),
-                                                  ),
+                                              style: TbTextStyles.bodyMedium.copyWith(
+                                                color: AppColors.primary, // Darker text
+                                              ),
                                             ),
                                           ),
                                           Flexible(
                                             child: Divider(
-                                              color: Colors.black.withValues(
-                                                alpha: .12,
-                                              ),
+                                              color: AppColors.primary.withValues(alpha: 0.3),
                                             ),
                                           ),
                                         ],
@@ -328,27 +294,34 @@ class _LoginPageState extends TbPageState<LoginPage>
                                                               .emailInvalidText,
                                                     ),
                                                   ]),
+                                              style: const TextStyle(color: Colors.black87),
                                               decoration: InputDecoration(
-                                                border:
-                                                    const OutlineInputBorder(),
-                                                enabledBorder:
-                                                    OutlineInputBorder(
-                                                      borderSide: BorderSide(
-                                                        color: Colors.black
-                                                            .withValues(
-                                                              alpha: .12,
-                                                            ),
-                                                      ),
-                                                    ),
+                                                border: OutlineInputBorder(
+                                                  borderRadius: BorderRadius.circular(8),
+                                                ),
+                                                enabledBorder: OutlineInputBorder(
+                                                  borderRadius: BorderRadius.circular(8),
+                                                  borderSide: BorderSide(
+                                                    color: AppColors.primary.withValues(alpha: 0.3), // Visible border
+                                                  ),
+                                                ),
+                                                focusedBorder: OutlineInputBorder(
+                                                  borderRadius: BorderRadius.circular(8),
+                                                  borderSide: BorderSide(
+                                                    color: AppColors.primary,
+                                                    width: 2,
+                                                  ),
+                                                ),
+                                                errorBorder: OutlineInputBorder(
+                                                  borderRadius: BorderRadius.circular(8),
+                                                  borderSide: BorderSide(
+                                                    color: AppColors.accent,
+                                                  ),
+                                                ),
                                                 labelText: S.of(context).email,
-                                                labelStyle: TbTextStyles
-                                                    .bodyLarge
-                                                    .copyWith(
-                                                      color: Colors.black
-                                                          .withValues(
-                                                            alpha: .54,
-                                                          ),
-                                                    ),
+                                                labelStyle: TbTextStyles.bodyLarge.copyWith(
+                                                  color: AppColors.primary, // Darker label
+                                                ),
                                               ),
                                             ),
                                             const SizedBox(height: 24),
@@ -374,45 +347,45 @@ class _LoginPageState extends TbPageState<LoginPage>
                                                               .passwordRequireText,
                                                     ),
                                                   ]),
+                                                  style: const TextStyle(color: Colors.black87),
                                                   decoration: InputDecoration(
                                                     suffixIcon: IconButton(
                                                       icon: Icon(
                                                         showPassword
                                                             ? Icons.visibility
-                                                            : Icons
-                                                                .visibility_off,
+                                                            : Icons.visibility_off,
                                                       ),
                                                       onPressed: () {
-                                                        _showPasswordNotifier
-                                                                .value =
-                                                            !_showPasswordNotifier
-                                                                .value;
+                                                        _showPasswordNotifier.value =
+                                                            !_showPasswordNotifier.value;
                                                       },
                                                     ),
-                                                    border:
-                                                        const OutlineInputBorder(),
-                                                    enabledBorder:
-                                                        OutlineInputBorder(
-                                                          borderSide:
-                                                              BorderSide(
-                                                                color: Colors
-                                                                    .black
-                                                                    .withValues(
-                                                                      alpha:
-                                                                          .12,
-                                                                    ),
-                                                              ),
-                                                        ),
-                                                    labelText:
-                                                        S.of(context).password,
-                                                    labelStyle: TbTextStyles
-                                                        .bodyLarge
-                                                        .copyWith(
-                                                          color: Colors.black
-                                                              .withValues(
-                                                                alpha: .54,
-                                                              ),
-                                                        ),
+                                                    border: OutlineInputBorder(
+                                                      borderRadius: BorderRadius.circular(8),
+                                                    ),
+                                                    enabledBorder: OutlineInputBorder(
+                                                      borderRadius: BorderRadius.circular(8),
+                                                      borderSide: BorderSide(
+                                                        color: AppColors.primary.withValues(alpha: 0.3),
+                                                      ),
+                                                    ),
+                                                    focusedBorder: OutlineInputBorder(
+                                                      borderRadius: BorderRadius.circular(8),
+                                                      borderSide: BorderSide(
+                                                        color: AppColors.primary,
+                                                        width: 2,
+                                                      ),
+                                                    ),
+                                                    errorBorder: OutlineInputBorder(
+                                                      borderRadius: BorderRadius.circular(8),
+                                                      borderSide: BorderSide(
+                                                        color: AppColors.accent,
+                                                      ),
+                                                    ),
+                                                    labelText: S.of(context).password,
+                                                    labelStyle: TbTextStyles.bodyLarge.copyWith(
+                                                      color: AppColors.primary,
+                                                    ),
                                                   ),
                                                 );
                                               },
@@ -431,7 +404,10 @@ class _LoginPageState extends TbPageState<LoginPage>
                                           },
                                           child: Text(
                                             S.of(context).passwordForgotText,
-                                            style: TbTextStyles.bodyMedium,
+                                            style: TbTextStyles.bodyMedium.copyWith(
+                                              color: AppColors.accent,
+                                              fontWeight: FontWeight.w500,
+                                            ),
                                           ),
                                         ),
                                       ],
@@ -439,8 +415,15 @@ class _LoginPageState extends TbPageState<LoginPage>
                                     const Spacer(),
                                     ElevatedButton(
                                       style: ElevatedButton.styleFrom(
+                                        backgroundColor: AppColors.accent, // Orange Accent
+                                        foregroundColor: Colors.black87,
                                         padding: const EdgeInsets.symmetric(
                                           vertical: 16,
+                                        ),
+                                        elevation: 2,
+                                        shadowColor: AppColors.golden.withValues(alpha: 0.3),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(8),
                                         ),
                                       ),
                                       onPressed: () {
@@ -448,7 +431,10 @@ class _LoginPageState extends TbPageState<LoginPage>
                                       },
                                       child: Text(
                                         S.of(context).login,
-                                        style: TbTextStyles.labelMedium,
+                                        style: TbTextStyles.labelMedium.copyWith(
+                                          fontWeight: FontWeight.w600,
+                                          color: Colors.black87,
+                                        ),
                                       ),
                                     ),
                                     if (state.selfRegistrationParams != null)
@@ -473,12 +459,11 @@ class _LoginPageState extends TbPageState<LoginPage>
                                                 child: Text(
                                                   S.of(context).createAccount,
                                                   style: TextStyle(
-                                                    color: Theme.of(context)
-                                                        .colorScheme
-                                                        .primary,
+                                                    color: AppColors.golden,
                                                     letterSpacing: 1,
                                                     fontSize: 14,
                                                     height: 20 / 14,
+                                                    fontWeight: FontWeight.w600,
                                                   ),
                                                 ),
                                               ),

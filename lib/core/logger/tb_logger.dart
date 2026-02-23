@@ -15,27 +15,33 @@ class TbLogger {
     output: TbLogOutput(),
   );
 
+  /// TRACE → logger.v
   void trace(dynamic message, [dynamic error, StackTrace? stackTrace]) {
-    _logger.t(message, error: error, stackTrace: stackTrace);
+    _logger.v(message);
   }
 
+  /// DEBUG → logger.d
   void debug(dynamic message, [dynamic error, StackTrace? stackTrace]) {
-    _logger.d(message, error: error, stackTrace: stackTrace);
+    _logger.d(message);
   }
 
+  /// INFO → logger.i
   void info(dynamic message, [dynamic error, StackTrace? stackTrace]) {
-    _logger.i(message, error: error, stackTrace: stackTrace);
+    _logger.i(message);
   }
 
+  /// WARN → logger.w
   void warn(dynamic message, [dynamic error, StackTrace? stackTrace]) {
-    _logger.w(message, error: error, stackTrace: stackTrace);
+    _logger.w(message);
   }
 
+  /// ERROR → logger.e
   void error(dynamic message, [dynamic error, StackTrace? stackTrace]) {
-    _logger.e(message, error: error, stackTrace: stackTrace);
+    _logger.e(message);
   }
 
+  /// FATAL → logger.wtf
   void fatal(dynamic message, [dynamic error, StackTrace? stackTrace]) {
-    _logger.f(message, error: error, stackTrace: stackTrace);
+    _logger.wtf(message);
   }
 }

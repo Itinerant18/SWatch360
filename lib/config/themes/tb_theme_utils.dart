@@ -5,12 +5,40 @@ import 'package:thingsboard_app/utils/transition/page_transitions.dart';
 abstract class TbThemeUtils {
   static final _tbTypography = Typography.material2018();
 
-  static const Color _tbTextColor = Color(0xFF282828);
 
-  static final tbPrimary =
-      // ignore: deprecated_member_use
-      _mergeColors(Colors.teal, {'500': Colors.teal[800]!.value});
-  static final tbAccent = _mergeColors(Colors.deepOrange, {});
+
+  // Custom Steel Blue & Orange default fallback colors
+  static final tbPrimary = _mergeColors(
+    const MaterialColor(0xFF5E6D85, <int, Color>{
+      50: Color(0xFFE6EAF0),
+      100: Color(0xFFD6DCE6),
+      200: Color(0xFFACB5C5),
+      300: Color(0xFF8A95AA),
+      400: Color(0xFF74829B),
+      500: Color(0xFF5E6D85),  // Steel Blue
+      600: Color(0xFF4E5F78),
+      700: Color(0xFF40536C),  // Header color
+      800: Color(0xFF344459),
+      900: Color(0xFF283546),
+    }),
+    {'500': const Color(0xFF5E6D85).value},
+  );
+  
+  static final tbAccent = _mergeColors(
+    const MaterialColor(0xFFFF7A45, <int, Color>{
+      50: Color(0xFFFFF3E0),
+      100: Color(0xFFFFE0B2),
+      200: Color(0xFFFFCC80),
+      300: Color(0xFFFFB74D),
+      400: Color(0xFFFFA726),
+      500: Color(0xFFFF7A45),  // Orange accent
+      600: Color(0xFFFB8C00),
+      700: Color(0xFFF57C00),
+      800: Color(0xFFEF6C00),
+      900: Color(0xFFE65100),
+    }),
+    {},
+  );
 
   static ThemeData createTheme(PaletteSettings? paletteSettings) {
     final primarySwatch =
@@ -23,19 +51,19 @@ abstract class TbThemeUtils {
       useMaterial3: false,
       primarySwatch: primarySwatch,
       colorScheme: theme.colorScheme.copyWith(primary: accentColor),
-      scaffoldBackgroundColor: const Color(0xFFFAFAFA),
-      textTheme: _tbTypography.black,
-      primaryTextTheme: _tbTypography.black,
+      scaffoldBackgroundColor: const Color(0xFFFAFAFA),  // #FAFAFA Off-white background
+      textTheme: _tbTypography.black,  // Black text
+      primaryTextTheme: _tbTypography.black,  // Black text
       typography: _tbTypography,
       appBarTheme: const AppBarTheme(
-        backgroundColor: Colors.white,
-        foregroundColor: _tbTextColor,
-        iconTheme: IconThemeData(color: _tbTextColor),
+        backgroundColor: Color(0xFF40536C),  // Steel Blue header
+        foregroundColor: Colors.white,        // White text on header
+        iconTheme: IconThemeData(color: Colors.white),  // White icons
       ),
-      bottomNavigationBarTheme: BottomNavigationBarThemeData(
-        backgroundColor: Colors.white,
-        selectedItemColor: primaryColor,
-        unselectedItemColor: Colors.black.withValues(alpha:  .38),
+      bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+        backgroundColor: Color(0xFF283546),  // White background
+        selectedItemColor: Color(0xFFFFA726),  // Brand Orange
+        unselectedItemColor: Colors.white ,  // Dark Steel Blue
         showSelectedLabels: true,
         showUnselectedLabels: true,
       ),

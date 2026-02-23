@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:thingsboard_app/constants/app_constants.dart';
 import 'package:thingsboard_app/core/auth/login/select_region/model/region.dart';
-import 'package:thingsboard_app/core/auth/login/select_region/select_region_screen.dart';
 import 'package:thingsboard_app/core/context/tb_context_widget.dart';
 import 'package:thingsboard_app/locator.dart';
 import 'package:thingsboard_app/utils/services/endpoint/i_endpoint_service.dart';
@@ -32,10 +31,11 @@ class _ThingsboardInitAppState extends TbPageState<ThingsboardInitRegionApp> {
           );
         }
 
+        // Auto-default to North America instead of showing region selection screen
         if ((snapshot.hasError || snapshot.data == null) &&
             !ThingsboardAppConstants.ignoreRegionSelection) {
-                FlutterNativeSplash.remove();
-          return SelectRegionScreen(tbContext);
+          // Automatically set North America as default region
+          getIt<IEndpointService>().setRegion(Region.northAmerica);
         }
         if (ThingsboardAppConstants.ignoreRegionSelection &&
             snapshot.data == null) {

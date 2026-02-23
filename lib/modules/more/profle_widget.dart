@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:thingsboard_app/config/routes/router.dart';
-import 'package:thingsboard_app/core/auth/noauth/presentation/widgets/endpoint_name_widget.dart';
 import 'package:thingsboard_app/core/usecases/user_details_usecase.dart';
 import 'package:thingsboard_app/generated/l10n.dart';
 import 'package:thingsboard_app/locator.dart';
 import 'package:thingsboard_app/modules/alarm/presentation/widgets/assignee/user_info_avatar_widget.dart';
 import 'package:thingsboard_app/thingsboard_client.dart';
-import 'package:thingsboard_app/utils/services/endpoint/i_endpoint_service.dart';
 import 'package:thingsboard_app/utils/ui/tb_text_styles.dart';
 import 'package:thingsboard_app/utils/ui/ui_utils.dart';
 
@@ -57,8 +55,19 @@ class ProfileWidget extends StatelessWidget {
             ),
             Padding(
               padding: const EdgeInsets.only(left: 10),
-              child: EndpointNameWidget(
-                endpoint: getIt<IEndpointService>().getCachedEndpoint(),
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(4),
+                  color: Theme.of(context).primaryColor.withValues(alpha: .10),
+                ),
+                padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 8),
+                child: Text(
+                  'Security Engineers Pvt. Ltd.',
+                  style: TbTextStyles.bodySmall.copyWith(
+                    color: Theme.of(context).primaryColor,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
               ),
             ),
           ],
