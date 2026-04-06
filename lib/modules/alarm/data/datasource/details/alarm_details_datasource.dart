@@ -27,10 +27,27 @@ class AlarmDetailsDatasource implements IAlarmDetailsDatasource {
   Future<AlarmCommentInfo> postComment(
     AlarmId alarmId, {
     required String comment,
-  })  {
+  }) {
+    final alarmComment = AlarmComment(
+      alarmId.id,
+      DateTime.now().millisecondsSinceEpoch,
+      alarmId,
+      null,
+      AlarmCommentType.OTHER,
+      AlarmCommentJsonNode(
+        text: comment,
+        subtype: null,
+        userId: null,
+        edited: false,
+        editedOn: null,
+        assigneeId: null,
+      ).toJson(),
+      null,
+    );
+
     return thingsboardClient
         .getAlarmService()
-        .postAlarmComment(comment, alarmId: alarmId);
+        .postAlarmComment(alarmComment, alarmId: alarmId);
   }
 
   @override
@@ -47,11 +64,27 @@ class AlarmDetailsDatasource implements IAlarmDetailsDatasource {
     required String id,
     required String comment,
   }) {
-    return thingsboardClient.getAlarmService().updatedAlarmComment(
-          comment,
-          alarmId: alarmId,
-          commentId: id,
-        );
+    final alarmComment = AlarmComment(
+      alarmId.id,
+      DateTime.now().millisecondsSinceEpoch,
+      alarmId,
+      null,
+      AlarmCommentType.OTHER,
+      AlarmCommentJsonNode(
+        text: comment,
+        subtype: null,
+        userId: null,
+        edited: true,
+        editedOn: DateTime.now().millisecondsSinceEpoch,
+        assigneeId: null,
+      ).toJson(),
+      null,
+    );
+
+    // The updated SDK routes comment operations through postAlarmComment.
+    return thingsboardClient
+        .getAlarmService()
+        .postAlarmComment(alarmComment, alarmId: alarmId);
   }
 
   @override

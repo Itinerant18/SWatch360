@@ -10,8 +10,10 @@ class SystemActivityWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final createdTime =
+        activity.createdTime ?? DateTime.now().millisecondsSinceEpoch;
     final diff = DateTime.now().difference(
-      DateTime.fromMillisecondsSinceEpoch(activity.createdTime),
+      DateTime.fromMillisecondsSinceEpoch(createdTime),
     );
 
     return Column(

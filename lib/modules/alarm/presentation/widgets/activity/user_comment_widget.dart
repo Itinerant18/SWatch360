@@ -35,10 +35,14 @@ class _UserCommentState extends State<UserCommentWidget> {
       ),
     );
     final diff = DateTime.now().difference(
-      DateTime.fromMillisecondsSinceEpoch(widget.activity.createdTime),
+      DateTime.fromMillisecondsSinceEpoch(
+        widget.activity.createdTime ?? DateTime.now().millisecondsSinceEpoch,
+      ),
     );
 
-    final canEdit = widget.activity.userId?.id == widget.userId.id;
+    final canEdit =
+        widget.activity.id != null &&
+        widget.activity.userId?.id == widget.userId.id;
     if (!canEdit) {
       return _buildComment(userInfo, diff);
     }
@@ -61,7 +65,7 @@ class _UserCommentState extends State<UserCommentWidget> {
           onPressed: () {
             context.read<AlarmActivityBloc>().add(
               AlarmEditCommentEvent(
-                widget.activity.id,
+                widget.activity.id!,
                 alarmId: widget.activity.alarmId,
                 comment: widget.activity.comment,
               ),
@@ -119,7 +123,7 @@ class _UserCommentState extends State<UserCommentWidget> {
               context.read<AlarmActivityBloc>().add(
                 DeleteAlarmCommentEvent(
                   alarmId: widget.activity.alarmId,
-                  commentId: widget.activity.id,
+                  commentId: widget.activity.id!,
                 ),
               );
             }

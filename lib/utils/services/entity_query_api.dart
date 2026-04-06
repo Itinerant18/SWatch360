@@ -37,8 +37,10 @@ abstract class EntityQueryApi {
   }) {
     EntityFilter deviceFilter;
     if (deviceType != null) {
-      deviceFilter =
-          DeviceTypeFilter(deviceType: deviceType, deviceNameFilter: '');
+      deviceFilter = DeviceTypeFilter(
+        deviceTypes: [deviceType],
+        deviceNameFilter: '',
+      );
     } else {
       deviceFilter = EntityTypeFilter(entityType: EntityType.DEVICE);
     }
@@ -63,8 +65,10 @@ abstract class EntityQueryApi {
     EntityFilter deviceFilter;
     List<KeyFilter>? keyFilters;
     if (deviceType != null) {
-      deviceFilter =
-          DeviceTypeFilter(deviceType: deviceType, deviceNameFilter: '');
+      deviceFilter = DeviceTypeFilter(
+        deviceTypes: [deviceType],
+        deviceNameFilter: '',
+      );
     } else {
       deviceFilter = EntityTypeFilter(entityType: EntityType.DEVICE);
     }

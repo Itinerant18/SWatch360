@@ -82,20 +82,21 @@ class AlarmAssigneeBloc extends Bloc<AlarmAssigneeEvent, AlarmAssigneeState> {
 
       case AlarmFetchAssigneeEvent():
         final alarmInfo = await fetchAlarmUseCase(id);
-        if (alarmInfo?.assignee != null) {
+        final currentAssignee = alarmInfo?.assignee;
+        if (currentAssignee?.id != null) {
           final userInfo = UserInfo(
-            alarmInfo!.assignee!.id,
-            email: alarmInfo.assignee!.email,
-            firstName: alarmInfo.assignee!.firstName,
-            lastName: alarmInfo.assignee!.lastName,
+            currentAssignee!.id!,
+            email: currentAssignee.email,
+            firstName: currentAssignee.firstName,
+            lastName: currentAssignee.lastName,
           );
 
-          final assignee = AssigneeEntity.fromUserInfo(
+          final assigneeEntity = AssigneeEntity.fromUserInfo(
             userInfo,
             detailsUseCase: getIt<UserDetailsUseCase>(),
           );
 
-          emit(AlarmAssigneeSelectedState(assignee));
+          emit(AlarmAssigneeSelectedState(assigneeEntity));
         }
 
     }

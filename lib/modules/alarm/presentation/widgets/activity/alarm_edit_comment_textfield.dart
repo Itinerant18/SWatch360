@@ -25,6 +25,17 @@ class AlarmEditCommentTextField extends StatefulWidget {
 class _AlarmEditCommentState extends State<AlarmEditCommentTextField> {
   final textController = TextEditingController();
 
+  String _extractCommentText(AlarmComment comment) {
+    final payload = comment.comment;
+    if (payload is AlarmCommentJsonNode) {
+      return payload.text;
+    }
+    if (payload is Map<String, dynamic>) {
+      return payload['text']?.toString() ?? '';
+    }
+    return payload?.toString() ?? '';
+  }
+
   @override
   Widget build(BuildContext context) {
     return TextField(
@@ -78,7 +89,7 @@ class _AlarmEditCommentState extends State<AlarmEditCommentTextField> {
 
   @override
   void initState() {
-    textController.text = widget.commentToEdit.text;
+    textController.text = _extractCommentText(widget.commentToEdit);
     super.initState();
   }
 
