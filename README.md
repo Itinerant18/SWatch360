@@ -1,98 +1,146 @@
-# SWatch360 - Flutter ThingsBoard Mobile Application
+# SWatch360
 
-This is the mobile application for SWatch360, built on the ThingsBoard PE platform.
+Flutter ThingsBoard mobile application.
 
-## 🚀 Environment Setup
+## Project Snapshot
 
-### General Requirements
-- [Flutter SDK](https://docs.flutter.dev/get-started/install) (matching the version in `pubspec.yaml`)
-- A code editor: [Android Studio](https://developer.android.com/studio), [VS Code](https://code.visualstudio.com/), or [IntelliJ IDEA](https://www.jetbrains.com/idea/)
+- Flutter app version: `1.7.0+9`
+- Dart SDK constraint: `^3.7.0`
+- iOS Podfile platform: `iOS 15.0`
+- Runner iOS deployment target in project settings: `15.6`
+- Main release archive command:
 
-### 🤖 Android Requirements
-- [Android Studio](https://developer.android.com/studio) with:
-  - Android SDK
-  - Android SDK Command-line Tools
-  - Android Emulator (optional, for testing)
-
-### 🍎 iOS Requirements (macOS only)
-- **A Mac computer** (Required for all iOS build and deployment tasks)
-- [Xcode](https://developer.apple.com/xcode/) (Latest stable version)
-- [CocoaPods](https://cocoapods.org/) (`sudo gem install cocoapods`)
-- Apple Developer Account (Required for code signing and App Store/TestFlight submission)
-
-### 1. Initialize the Project
-```bash
-# Clone the repository
-git clone https://github.com/Itinerant18/SWatch360.git
-cd SWatch360
-
-# Install dependencies
-flutter pub get
-
-# For iOS (Run this on macOS)
-cd ios && pod install && cd ..
-```
-
-## 🛠️ Build Instructions
-
-The build commands use the parameters defined in `configs.json` automatically via the `--dart-define-from-file` flag.
-
-### 🧹 Clean and Sync
-Before any new build, it is recommended to clean the project:
-```bash
-flutter clean
-flutter pub get
-```
-
-### 🤖 Android Builds
-
-#### Build APK (Release)
-Generates a release APK for manual distribution.
-```bash
-flutter build apk --release --dart-define-from-file configs.json
-```
-**Output Path:** `build/app/outputs/flutter-apk/app-release.apk`
-
-#### Build App Bundle (AAB - Release)
-Generates an AAB for submission to the Google Play Store.
-```bash
-flutter build appbundle --release --dart-define-from-file configs.json
-```
-**Output Path:** `build/app/outputs/bundle/release/app-release.aab`
-
----
-
-### 🍎 iOS Builds (macOS only)
-
-#### Build IPA (Release)
-Generates an IPA for the App Store or TestFlight.
 ```bash
 flutter build ipa --release --dart-define-from-file configs.json
 ```
-**Output Path:** `build/ios/archive/Runner.xcarchive` (Follow the Xcode instructions to export the `.ipa`)
 
----
+## Requirements
 
-## 🔗 Git Sync & Push
+### General
 
-To push your latest workspace changes to GitHub:
+- Flutter SDK installed and on PATH
+- Xcode + CocoaPods for iOS
+- Android Studio/SDK for Android
+
+### iOS (macOS only)
+
+- Xcode (recent stable)
+- CocoaPods
+- Apple Developer team/signing profile configured in Xcode
+
+## Setup
 
 ```bash
-# 1. Stage all changes
-git add .
+git clone https://github.com/Itinerant18/SWatch360.git
+cd SWatch360
 
-# 2. Commit with a meaningful message
-git commit -m "chore: updated configuration and build settings for SWatch360"
+flutter pub get
 
-# 3. Push to main branch
-git push origin main
+# iOS only
+cd ios
+pod install
+cd ..
 ```
 
-## 📋 Configuration Details
-Your `configs.json` contains critical environment variables. Ensure these are kept secure and consistent across builds.
+## Build
 
-| Key | Value |
-| :--- | :--- |
-| **App ID** | com.seple.demohestia |
-| **App Name** | SWatch 360 |
-| **API Endpoint** | https://thingsboard.cloud |
+### Android APK
+
+```bash
+flutter build apk --release --dart-define-from-file configs.json
+```
+
+Output: `build/app/outputs/flutter-apk/app-release.apk`
+
+### Android App Bundle (Play Store)
+
+```bash
+flutter build appbundle --release --dart-define-from-file configs.json
+```
+
+Output: `build/app/outputs/bundle/release/app-release.aab`
+
+### iOS IPA (App Store/TestFlight)
+
+```bash
+flutter build ipa --release --dart-define-from-file configs.json
+```
+
+Outputs:
+
+- Archive: `build/ios/archive/Runner.xcarchive`
+- IPA: `build/ios/ipa/*.ipa`
+
+## iOS Archive Runbook (Important)
+
+If archive fails, use this exact order.
+
+1. Clean Flutter and dependency state:
+
+```bash
+flutter clean
+flutter pub get
+cd ios && pod install && cd ..
+```
+
+2. Ensure these iOS project conditions are true:
+
+- `ENABLE_USER_SCRIPT_SANDBOXING = NO` in Runner build configs
+- `StoreKit.framework` is linked in Frameworks, but not embedded in "Embed Frameworks"
+- Pod post-install has compatibility overrides:
+  - `ENABLE_MODULE_VERIFIER = NO`
+  - `CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = NO`
+
+3. Re-run archive:
+
+```bash
+flutter build ipa --release --dart-define-from-file configs.json
+```
+
+## Disk Space Failure Fix (Very Common)
+
+If you see errors like:
+
+- `No space left on device (28)`
+- `Mkdtemp(...) No space left on device`
+- `error writing ... ExplicitPrecompiledModules ...`
+
+free Xcode and build caches:
+
+```bash
+rm -rf ~/Library/Developer/Xcode/DerivedData/*
+rm -rf ~/Library/Developer/Xcode/iOS\ DeviceSupport/*
+rm -rf build/ios/*
+df -h /
+```
+
+Then run archive again.
+
+## Warning vs Error (How to Read Logs)
+
+These are usually warnings and do not block archive:
+
+- Deprecation warnings in Pods/plugins (`deepLinkURLScheme`, `SFAuthenticationSession`, etc.)
+- iOS deployment target warnings from third-party pods
+- `Run Script will be run during every build` notes
+
+These are blockers and must be fixed:
+
+- Dart compile errors in `lib/...`
+- `No space left on device`
+- Framework packaging errors (for example embedded system framework issues)
+
+## Configuration
+
+Builds rely on `configs.json` via `--dart-define-from-file`.
+
+Current config highlights:
+
+- API endpoint: `https://thingsboard.cloud`
+- Android application id: `com.seple.demohestia`
+- App display name: `SWatch 360`
+
+Security note:
+
+- Do not expose production secrets in public repos.
+- Prefer CI secrets/environment injection for sensitive values.
