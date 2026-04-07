@@ -2,6 +2,14 @@
 
 Flutter ThingsBoard mobile application.
 
+## Screenshots
+
+<p float="left">
+  <img src="https://github.com/user-attachments/assets/bbe48a25-a856-4800-bda5-545ca4de2d17" width="30%" />
+  <img src="https://github.com/user-attachments/assets/c0318a27-775f-4354-b40f-19d1ea26ca98" width="30%" />
+  <img src="https://github.com/user-attachments/assets/2875bb54-a50b-4146-b9fb-cee1ff1ad510" width="30%" />
+</p>
+
 ## Project Snapshot
 
 - Flutter app version: `1.7.0+9`
