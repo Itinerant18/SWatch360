@@ -115,6 +115,100 @@ SWatch360 follows a **Clean Architecture + BLoC** pattern, with dependency injec
   │ (thingsboard.cloud or │   │                       │
   │  self-hosted)         │   └───────────────────────┘
   └───────────────────────┘
+
+
+
+  flowchart TB
+    %% Styling
+    classDef presentation fill:#e3f2fd,stroke:#1565c0,stroke-width:2px,color:#000
+    classDef domain fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px,color:#000
+    classDef data fill:#fff3e0,stroke:#e65100,stroke-width:2px,color:#000
+    classDef service fill:#f3e5f5,stroke:#6a1b9a,stroke-width:2px,color:#000
+    classDef external fill:#eceff1,stroke:#455a64,stroke-width:2px,color:#000
+    classDef hardware fill:#ffebee,stroke:#c62828,stroke-width:2px,color:#000
+
+    subgraph App ["SWatch360 Flutter Application"]
+        direction TB
+
+        subgraph Presentation ["Presentation Layer (Flutter UI & State)"]
+            direction TB
+            Router("Fluro Router<br>(Navigation & App Links)")
+            
+            subgraph Modules ["Feature Modules"]
+                direction LR
+                UI_Dash["Dashboards<br>(In-app WebView)"]
+                UI_Dev["Devices & Assets"]
+                UI_Alarm["Alarms & Audit"]
+                UI_Auth["Auth & Profile"]
+            end
+            
+            BLoC("flutter_bloc / Cubit<br>(Reactive State Management)")
+            
+            Router --> Modules
+            Modules <--> BLoC
+        end
+
+        subgraph Domain ["Domain Layer (Business Logic)"]
+            direction TB
+            UseCases("Use Cases<br>(e.g., UserDetailsUseCase)")
+            RepoInterfaces("Repository Interfaces<br>(Abstract Contracts)")
+            
+            BLoC --> UseCases
+            UseCases --> RepoInterfaces
+        end
+
+        subgraph Data ["Data Layer (Data Access & Persistence)"]
+            direction TB
+            RepoImpl("Repository Implementations")
+            
+            subgraph Remote ["Remote Data"]
+                TBClient("thingsboard_pe_client<br>(REST / WebSocket)")
+            end
+            
+            subgraph Local ["Local Storage"]
+                Hive("Hive DB<br>(NoSQL)")
+                Secure("FlutterSecureStorage<br>(Tokens / Secrets)")
+            end
+            
+            RepoInterfaces -.-> |Implements| RepoImpl
+            RepoImpl --> Remote
+            RepoImpl --> Local
+        end
+
+        subgraph Services ["Platform & Service Layer (Injected via get_it)"]
+            direction LR
+            FCM("Firebase Services<br>(Cloud Messaging)")
+            BLE("Device Provisioning<br>(BLE / SoftAP / WiFi)")
+            Utils("Platform Utils<br>(Location, Permissions, Device Info)")
+            Layout("Layout & Theme<br>(White-labeling, L10n)")
+        end
+        
+        %% Internal Data Flow
+        Presentation -.-> |Depends on| Services
+        Domain -.-> |Depends on| Services
+        Data -.-> |Depends on| Services
+    end
+
+    subgraph External ["External Systems"]
+        direction LR
+        TBServer("ThingsBoard Cloud / Server<br>(Multi-tenant IoT Platform)")
+        Firebase("Firebase<br>(Push Notifications)")
+    end
+    
+    ESP("ESP32 Hardware<br>(IoT Devices)")
+
+    %% External Connections
+    TBClient <--> |"HTTP / WebSockets"| TBServer
+    FCM <--> |"FCM Payloads"| Firebase
+    BLE -.-> |"Bluetooth / SoftAP"| ESP
+
+    %% Assign Classes
+    class Presentation,Modules,UI_Dash,UI_Dev,UI_Alarm,UI_Auth,BLoC,Router presentation
+    class Domain,UseCases,RepoInterfaces domain
+    class Data,RepoImpl,Remote,Local,TBClient,Hive,Secure data
+    class Services,FCM,BLE,Utils,Layout service
+    class External,TBServer,Firebase external
+    class ESP hardware
 ```
 
 ### Dependency Injection
