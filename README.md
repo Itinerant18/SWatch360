@@ -81,96 +81,86 @@ SWatch360 follows a **Clean Architecture + BLoC** pattern, with dependency injec
 
 ```mermaid
 flowchart TB
-    %% ── Styles ──────────────────────────────────────────────────────────
     classDef presentation fill:#e3f2fd,stroke:#1565c0,stroke-width:2px,color:#000
-    classDef domain       fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px,color:#000
-    classDef data         fill:#fff3e0,stroke:#e65100,stroke-width:2px,color:#000
-    classDef service      fill:#f3e5f5,stroke:#6a1b9a,stroke-width:2px,color:#000
-    classDef external     fill:#eceff1,stroke:#455a64,stroke-width:2px,color:#000
-    classDef hardware     fill:#ffebee,stroke:#c62828,stroke-width:2px,color:#000
+    classDef domain fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px,color:#000
+    classDef data fill:#fff3e0,stroke:#e65100,stroke-width:2px,color:#000
+    classDef service fill:#f3e5f5,stroke:#6a1b9a,stroke-width:2px,color:#000
+    classDef external fill:#eceff1,stroke:#455a64,stroke-width:2px,color:#000
+    classDef hardware fill:#ffebee,stroke:#c62828,stroke-width:2px,color:#000
 
-    %% ── Application boundary ────────────────────────────────────────────
     subgraph App ["SWatch360 Flutter Application"]
         direction TB
 
-        %% Presentation
-        subgraph Presentation ["Presentation Layer  (Flutter UI & State)"]
+        subgraph Presentation ["Presentation Layer - Flutter UI and State"]
             direction TB
-            Router("Fluro Router<br/>(Navigation & App Links)")
+            Router("Fluro Router<br>Navigation and App Links")
 
             subgraph Modules ["Feature Modules"]
                 direction LR
-                UI_Dash["Dashboards<br/>(In-app WebView)"]
-                UI_Dev["Devices & Assets"]
-                UI_Alarm["Alarms & Audit"]
-                UI_Auth["Auth & Profile"]
+                UI_Dash["Dashboards<br>In-app WebView"]
+                UI_Dev["Devices and Assets"]
+                UI_Alarm["Alarms and Audit"]
+                UI_Auth["Auth and Profile"]
             end
 
-            BLoC("flutter_bloc / Cubit<br/>(Reactive State Management)")
+            BLoC("flutter_bloc / Cubit<br>Reactive State Management")
 
             Router --> Modules
             Modules <--> BLoC
         end
 
-        %% Domain
-        subgraph Domain ["Domain Layer  (Business Logic)"]
+        subgraph Domain ["Domain Layer - Business Logic"]
             direction TB
-            UseCases("Use Cases<br/>(e.g. UserDetailsUseCase)")
-            RepoInterfaces("Repository Interfaces<br/>(Abstract Contracts)")
+            UseCases("Use Cases<br>e.g. UserDetailsUseCase")
+            RepoInterfaces("Repository Interfaces<br>Abstract Contracts")
             UseCases --> RepoInterfaces
         end
 
-        %% Data
-        subgraph Data ["Data Layer  (Data Access & Persistence)"]
+        subgraph Data ["Data Layer - Data Access and Persistence"]
             direction TB
             RepoImpl("Repository Implementations")
 
             subgraph Remote ["Remote Data"]
-                TBClient("thingsboard_pe_client<br/>(REST / WebSocket)")
+                TBClient("thingsboard_pe_client<br>REST / WebSocket")
             end
 
             subgraph Local ["Local Storage"]
-                Hive("Hive DB<br/>(NoSQL)")
-                Secure("FlutterSecureStorage<br/>(Tokens / Secrets)")
+                Hive("Hive DB<br>NoSQL")
+                Secure("FlutterSecureStorage<br>Tokens / Secrets")
             end
 
             RepoImpl --> Remote
             RepoImpl --> Local
         end
 
-        %% Services
-        subgraph Services ["Platform & Service Layer  (Injected via get_it)"]
+        subgraph Services ["Platform and Service Layer - Injected via get_it"]
             direction LR
-            FCM("Firebase Services<br/>(Cloud Messaging)")
-            BLE("Device Provisioning<br/>(BLE / SoftAP / WiFi)")
-            Utils("Platform Utils<br/>(Location, Permissions, Device Info)")
-            Layout("Layout & Theme<br/>(White-labelling, L10n)")
+            FCM("Firebase Services<br>Cloud Messaging")
+            BLE("Device Provisioning<br>BLE / SoftAP / WiFi")
+            Utils("Platform Utils<br>Location, Permissions, Device Info")
+            Layout("Layout and Theme<br>White-labelling, L10n")
         end
 
-        %% ── Cross-layer wiring (declared outside subgraphs) ─────────────
-        BLoC          --> UseCases
+        BLoC --> UseCases
         RepoInterfaces -.->|implements| RepoImpl
 
         Presentation -.->|uses| Services
-        Domain       -.->|uses| Services
-        Data         -.->|uses| Services
+        Domain -.->|uses| Services
+        Data -.->|uses| Services
     end
 
-    %% ── External systems ────────────────────────────────────────────────
     subgraph External ["External Systems"]
         direction LR
-        TBServer("ThingsBoard Cloud / Server<br/>(Multi-tenant IoT Platform)")
-        Firebase("Firebase<br/>(Push Notifications)")
+        TBServer("ThingsBoard Cloud / Server<br>Multi-tenant IoT Platform")
+        Firebase("Firebase<br>Push Notifications")
     end
 
-    ESP("ESP32 Hardware<br/>(IoT Devices)")
+    ESP("ESP32 Hardware<br>IoT Devices")
 
-    %% ── External connections ────────────────────────────────────────────
-    TBClient <-->|"HTTP / WebSockets"| TBServer
-    FCM      <-->|"FCM Payloads"|      Firebase
-    BLE      -.->|"Bluetooth / SoftAP"| ESP
+    TBClient <-->|HTTP / WebSockets| TBServer
+    FCM <-->|FCM Payloads| Firebase
+    BLE -.->|Bluetooth / SoftAP| ESP
 
-    %% ── Class assignments ───────────────────────────────────────────────
     class Presentation,Modules,UI_Dash,UI_Dev,UI_Alarm,UI_Auth,BLoC,Router presentation
     class Domain,UseCases,RepoInterfaces domain
     class Data,RepoImpl,Remote,Local,TBClient,Hive,Secure data
