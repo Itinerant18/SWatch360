@@ -1,5 +1,8 @@
 plugins {
     id 'com.android.application'
+    // START: FlutterFire Configuration
+    id 'com.google.gms.google-services'
+    // END: FlutterFire Configuration
     id 'kotlin-android'
     id 'dev.flutter.flutter-gradle-plugin'
 }
@@ -44,7 +47,7 @@ def redirectURLScheme = getDartDefineValue('registrationRedirectUrlScheme') ?: '
 
 android {
     namespace "org.thingsboard.pe.app"
-    compileSdkVersion 35
+    compileSdkVersion 36
 
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'

@@ -216,6 +216,7 @@ class NotificationService {
   }
 
   Future<void> showNotification(RemoteMessage message) async {
+    _log.debug('showNotification: data=${message.data}, notification=${message.notification}');
     final notification = message.notification;
 
     if (notification != null) {
@@ -228,6 +229,18 @@ class NotificationService {
       );
 
       _localService.increaseNotificationBadgeCount();
+    } else {
+      _log.debug('showNotification: message.notification is null, treating as data-only');
+      if (message.data.containsKey('title') || message.data.containsKey('body')) {
+        flutterLocalNotificationsPlugin.show(
+          message.hashCode,
+          message.data['title']?.toString(),
+          message.data['body']?.toString(),
+          _notificationDetails,
+          payload: json.encode(message.data),
+        );
+        _localService.increaseNotificationBadgeCount();
+      }
     }
   }
 

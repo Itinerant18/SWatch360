@@ -5,7 +5,10 @@
   "registrationRedirectUrlScheme": "tbscheme",
   "registrationRedirectUrlHost": "app.pe.thingsboard.org",
   "androidApplicationId": "com.seple.demohestia",
-  "androidApplicationName": "SWatch 360",
+  "androidApplicationName": "Demo Hestia",
   "thingsboardOAuth2CallbackUrlScheme": "com.seple.demohestia.auth",
-  "thingsboardAndroidAppSecret": "aVlLY1lrcnNMV1NEMlNiS2J3TnU4aHBzUDJzbW40T3VRWEhab1Y5RWZoTEk3OENIU3ViZ3RXbVpCbHZVRzRseQ=="
+  "thingsboardAndroidAppSecret": "aVlLY1lrcnNMV1NEMlNiS2J3TnU4aHBzUDJzbW40T3VRWEhab1Y5RWZoTEk3OENIU3ViZ3RXbVpCbHZVRzRseQ==",
+  "iosApplicationId": "com.seple.demohestia",
+  "iosApplicationName": "SWatch360",
+  "thingsboardIosAppSecret": "VXRsYWNSQ3lqVXdIczkwZ0ZEaHVtYk1zWGQwOEJqY0FvMnphYnNnUWpXQlllc1BZenpISXBvejF1TEJSeVZtSA=="
 }
